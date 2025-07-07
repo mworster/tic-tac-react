@@ -52,18 +52,17 @@ const Game = () => {
     : `Next: Player ${isXNext ? 'X' : 'O'}`;
 
   return (
-    <div className="game">
-      <h1>Tic Tac Toe</h1>
-      <div className="status">{status}</div>
-      <div className="board">
-        <div className="row">{[0, 1, 2].map(renderSquare)}</div>
-        <div className="row">{[3, 4, 5].map(renderSquare)}</div>
-        <div className="row">{[6, 7, 8].map(renderSquare)}</div>
-      </div>
-      <button className="reset" onClick={handleReset}>
-        🔁 Reset Game
-      </button>
-    </div>
+<div className="game">
+  <h1>Tic Tac Toe</h1>
+  <div className="status">{status}</div>
+  <div className="board">
+    {[0, 1, 2, 3, 4, 5, 6, 7, 8].map(renderSquare)}
+  </div>
+  <button className="reset" onClick={handleReset}>
+    🔁 Reset Game
+  </button>
+</div>
+
   );
 };
 
