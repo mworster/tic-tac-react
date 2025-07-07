@@ -7,6 +7,7 @@ const Game = () => {
   const [board, setBoard] = useState(defaultBoard);
   const [isXNext, setIsXNext] = useState(true);
   const [winner, setWinner] = useState(null);
+  const [winningLine, setWinningLine] = useState([]);
 
   // Load from localStorage on mount
   useEffect(() => {
@@ -29,13 +30,18 @@ const Game = () => {
     newBoard[index] = isXNext ? 'X' : 'O';
     setBoard(newBoard);
     setIsXNext(!isXNext);
-    setWinner(calculateWinner(newBoard));
+    const result = calculateWinner(newBoard);
+    if (result) {
+      setWinner(result.winner);
+      setWinningLine(result.line);
+    }
   };
 
   const handleReset = () => {
     setBoard(defaultBoard);
     setIsXNext(true);
     setWinner(null);
+    setWinningLine([]);
     localStorage.removeItem('tic-tac-toe');
   };
 
@@ -57,6 +63,7 @@ const Game = () => {
   <div className="status">{status}</div>
   <div className="board">
     {[0, 1, 2, 3, 4, 5, 6, 7, 8].map(renderSquare)}
+    {winner && <WinningLine line={winningLine} />}
   </div>
   <button className="reset" onClick={handleReset}>
     🔁 Reset Game
@@ -66,6 +73,24 @@ const Game = () => {
   );
 };
 
+const WinningLine = ({ line }) => {
+  const positions = {
+    '0,1,2': 'horizontal top',
+    '3,4,5': 'horizontal middle',
+    '6,7,8': 'horizontal bottom',
+    '0,3,6': 'vertical left',
+    '1,4,7': 'vertical center',
+    '2,5,8': 'vertical right',
+    '0,4,8': 'diagonal main',
+    '2,4,6': 'diagonal anti'
+  };
+
+  const className = `winning-line ${positions[line.sort((a, b) => a - b).join(',')]}`;
+
+  return <div className={className}></div>;
+};
+
+
 // Win condition checker
 function calculateWinner(board) {
   const lines = [
@@ -73,9 +98,10 @@ function calculateWinner(board) {
     [0, 3, 6], [1, 4, 7], [2, 5, 8], // columns
     [0, 4, 8], [2, 4, 6]             // diagonals
   ];
-  for (let [a, b, c] of lines) {
+  for (let i = 0; i < lines.length; i++) {
+    const [a, b, c] = lines[i];
     if (board[a] && board[a] === board[b] && board[a] === board[c]) {
-      return board[a];
+      return { winner: board[a], line: [a, b, c] };
     }
   }
   return null;
