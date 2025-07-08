@@ -2,6 +2,12 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+## Bypass Windows Script issues
+
+Before running this project type the following in to the command prompt:
+
+`Set-ExecutionPolicy RemoteSigned -Scope CurrentUser`
+
 ## Available Scripts
 
 In the project directory, you can run:
